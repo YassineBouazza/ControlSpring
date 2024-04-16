@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>Index page</title>
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/5.3.3/css/bootstrap.min.css"/>
+    <style>
+        body {
+            padding-top: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            border-radius: 5px;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .table {
+            background-color: #fff;
+            border-radius: 10px;
+        }
+
+        .page-link {
+            color: #007bff;
+        }
+
+        .page-link:hover {
+            color: #0056b3;
+        }
+
+        .pagination {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="p-3 m-2">
+    <div class="card">
+        <div class="card-header">Liste Produits | <a href="ajouterproduit" class="btn btn-success">Ajouter Produit</a></div>
+        <div class="card-body">
+
+            <div class="d-flex justify-content-center">
+                <form method="get" th:action="@{indexpage}" class="input-group mb-3">
+                    <input type="text" name="search" th:value="${keyword}" class="form-control" placeholder="Search...">
+                    <button class="btn btn-primary" type="submit">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                             class="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Reference</th>
+                        <th>Title</th>
+                        <th>Prix</th>
+                        <th colspan="2">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p:${listProduits}">
+                        <td th:text="${p.getId()}"></td>
+                        <td th:text="${p.getTitle()}"></td>
+                        <td th:text="${p.getPrix()}"></td>
+                        <td><a th:href="@{deleteProduit(id=${p.getId()})}" class="btn btn-danger">
+                            Delete
+                        </a></td>
+                        <td><a th:href="@{editProduit(id=${p.getId()})}" class="btn btn-warning">
+                            Edit
+                        </a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="container">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${page == 0} ? 'disabled' : ''">
+                        <a class="page-link" th:href="@{indexpage(page=0)}">First</a>
+                    </li>
+                    <li class="page-item" th:classappend="${page == 0} ? 'disabled' : ''">
+                        <a class="page-link" th:href="@{indexpage(page=${page - 1})}">Previous</a>
+                    </li>
+                    <li class="page-item" th:each="p, stat: ${pages}" th:classappend="${stat.index == page} ? 'active' : ''">
+                        <a class="page-link" th:text="${p}" th:href="@{indexpage(page=${p})}"></a>
+                    </li>
+                    <li class="page-item" th:classappend="${page == pages.size() - 1} ? 'disabled' : ''">
+                        <a class="page-link" th:href="@{indexpage(page=${page + 1})}">Next</a>
+                    </li>
+                    <li class="page-item" th:classappend="${page == pages.size() - 1} ? 'disabled' : ''">
+                        <a class="page-link" th:href="@{indexpage(page=${pages.size() - 1})}">Last</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
